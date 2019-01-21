@@ -59,7 +59,7 @@ export class DateOperations extends Component {
                 const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 this.setState({ result: diffDays, globalError: null });
             } else {
-                const globalError = 'First Date cannot be greater than Second Date';
+                const globalError = 'Second Date should be greater than First Date';
                 this.setState({ result: null, isFormValid: false, globalError: globalError });
             }
 
@@ -205,27 +205,13 @@ export class DateOperations extends Component {
                         label={formElement.config.elementLabel}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
-                <button onClick={this.dateSubmitHandler} disabled={!this.state.isFormValid}>Submit</button>
+                <button className={classes.Button} onClick={this.dateSubmitHandler} disabled={!this.state.isFormValid}>Submit</button>
             </form>
         );
         return <div className={classes.DateOperations}>
             {globalErrorBlock}
             {form}
             {resultDiv}
-            {/* <form onSubmit={this.dateSubmitHandler}>
-                <label>Start Date: </label>
-                <input
-                    value={this.state.firstDate}
-                    placeholder="DD/MM/YYYY"
-                    onChange={(event) => this.inputChangedHandler(event, 'firstDate')} />
-                <br></br><br></br>
-                <label>End Date: </label>
-                <input value={this.state.secondDate}
-                    placeholder="DD/MM/YYYY"
-                    onChange={(event) => this.inputChangedHandler(event, 'secondDate')} />
-                <br></br><br></br>
-                
-            </form> */}
         </div>
     }
 }
