@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import Input from '../../components/UI/Input/Input';
 import classes from './DateOperations.css';
+import axiosInstance from '../../axiosInstance';
 
 export class DateOperations extends Component {
 
     state = {
         loading: false,
+        isUserAuthenticated: false,
         dateForm: {
             firstDate: {
                 elementLabel: 'First Date',
@@ -46,6 +48,18 @@ export class DateOperations extends Component {
         globalError: null
     };
     errorMsg = null;
+
+    // Dummy Authentication check by calling a REST API
+    componentDidMount() {
+        axiosInstance.get('/userData.json').then(userData => {
+            if (userData.data.userId === 'Test1') {
+                this.setState({ isUserAuthenticated: true });
+            } else {
+                this.setState({ isUserAuthenticated: false });
+            }
+        });
+    }
+
     // Method called on click of submit button
     dateSubmitHandler = (event) => {
         // To prevent the form from submitting
@@ -68,6 +82,7 @@ export class DateOperations extends Component {
 
         }
     };
+    // Method to parse date from [DD/MM/YYYY] format to [MM/DD/YYYY]
     parseDate(dateValue) {
         const regex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
         let regs = dateValue.match(regex);
@@ -76,6 +91,7 @@ export class DateOperations extends Component {
         const year = regs[3];
         return new Date(month + '/' + day + '/' + year);
     }
+    // Event handler called on change of input elements
     inputChangedHandler = (event, inputIdentifier) => {
         const updatedForm = {
             ...this.state.dateForm
@@ -103,6 +119,7 @@ export class DateOperations extends Component {
         this.setState({ dateForm: updatedForm, isFormValid: isFormValid });
 
     }
+    // Method to check the validity of the form
     checkFormValidity(value, rules) {
         let isValid = true;
         if (!rules) {
@@ -163,7 +180,7 @@ export class DateOperations extends Component {
                 }
 
             } else {
-                this.errorMsg = 'Input a valid date [MM/DD/YYYY ]';
+                this.errorMsg = 'Input a valid date [DD/MM/YYYY ]';
                 return false;
             }
         } else {
@@ -209,6 +226,7 @@ export class DateOperations extends Component {
             </form>
         );
         return <div className={classes.DateOperations}>
+            <h2>Calculate difference in days between two dates</h2>
             {globalErrorBlock}
             {form}
             {resultDiv}
